@@ -1,6 +1,8 @@
 from scrapy import Spider,Request
 import urllib.parse as urlparse
 
+from ..items import UdemyCouponsItem
+
 class Coupons(Spider):
 	name = 'coupons'
 	start_urls = [
@@ -26,20 +28,18 @@ class Coupons(Spider):
 		course_span_tags = all_items.xpath('//div/p[3]/span[@class="tag-post"]')
 		course_tags = []
 		course_coupons = []
-		coupon_links = all_items.xpath('//a[@class="more-link"]/@href').extract()
 		for i in range(0,len(course_span_tags)):
 			course_tags.append(course_span_tags[i].css('a::text').extract())
-		for i in range(0,len(coupon_links)):
-			course_coupons.append(Request("".join(coupon_links[i]), callback = self.parse_smartybro_coupon_links))
+		for href in all_items.xpath('//a[@class="more-link"]/@href'):
+			url = response.urljoin(href.extract())
+			yield Request(url, callback = self.parse_smartybro_coupon_links)
 
 			
-		yield {'course_names':course_names,'course_tags':course_tags,
-				'coupon_links':coupon_links,'coupons':course_coupons}
+		yield {'course_names':course_names,'course_tags':course_tags}
 
 	def parse_smartybro_coupon_links(self,response):
-		# coupon_button = response.xpath('//a[@class="fasc-type-flat"]/@onclick').extract_first()
-		# yield coupon_button
-		print('hello')
+		coupon_link = response.css('a.fasc-type-flat attr:href').extract_first()
+		yield coupon_link
 
 		
 	def parse_comidoc(self,response):
