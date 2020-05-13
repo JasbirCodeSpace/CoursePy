@@ -10,6 +10,7 @@ import scrapy
 
 class UdemyCouponsItem(scrapy.Item):
     # define the fields for your item here like:
+    site = scrapy.Field()
     name = scrapy.Field()
     tags = scrapy.Field()
     link = scrapy.Field()
