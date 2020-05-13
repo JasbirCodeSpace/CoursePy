@@ -9,27 +9,29 @@ import sqlite3
 import urllib.parse as urlparse
 
 class UdemyCouponsPipeline:
+	dbFile = 'udemycoupons'
+	dbTable = 'udemy_coupons'
 	def __init__(self):
 		self.create_connection()
 		self.create_table()
 
 	def create_connection(self):
-		self.conn = sqlite3.connect("udemycoupons")
+		self.conn = sqlite3.connect(self.dbFile)
 		self.cur = self.conn.cursor()
 
 	def create_table(self):
-		self.cur.execute("""drop table if exists udemy_coupons""")
-		self.cur.execute("""create table udemy_coupons(
+		self.cur.execute("""DROP TABLE IF EXISTS %s """ % self.dbTable)
+		self.cur.execute("""CREATE TABLE %s (
+			site text,
 			name text PRIMARY KEY,
-			tags text NOT NULL,
-			link NOT NULL,
-			code text)""")
-
-	def close_connection(self):
-		self.conn.close()
+			tags text,
+			link text,
+			code text)""" % self.dbTable)
+		self.conn.commit()
 
 	def insert_db(self,item):
-		self.cur.execute("""insert into udemy_coupons values(?,?,?,?)""",(
+		self.cur.execute("""INSERT INTO %s VALUES(?,?,?,?,?)""" % self.dbTable,(
+			item['site'],
 			item['name'],
 			"&".join(item['tags']),
 			item['link'],
