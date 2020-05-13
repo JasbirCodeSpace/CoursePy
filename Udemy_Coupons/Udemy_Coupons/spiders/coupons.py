@@ -16,9 +16,8 @@ class Coupons(Spider):
 		for url in self.start_urls:
 			if url == 'https://smartybro.com/category/udemy-coupon-100-off/':
 				yield Request(url , callback=self.parse_smartybro)
-
-			# elif url == 'https://comidoc.net/coupons':
-			# 	yield Request(url , callback=self.parse_comidoc)
+			elif url == 'https://comidoc.net/coupons':
+				yield Request(url , callback=self.parse_comidoc)
 			# elif url == 'https://udemycoupon.learnviral.com/':
 			# 	yield Request(url , callback=self.parse_learnviral)
 			# else :
@@ -48,8 +47,25 @@ class Coupons(Spider):
 		return items
 
 		
-	# def parse_comidoc(self,response):
-	# 	print(2)
+	def parse_comidoc(self,response):
+		all_items = response.css('div.Coupons__List-sc-181j6ri-1 a::attr(href)').extract()
+		for href in all_items:
+			url = response.urljoin(href)
+			yield Request(url , callback= self.parse_comidoc_each_page)
+			
+	def parse_comidoc_each_page(self,response):
+		items = UdemyCouponsItem()
+		items['site'] = 'Comidoc'
+		items['name'] = response.css('h2.selectorgadget_selected').extract_first()
+		items['tags'] = response.css('div.hvbkPj+ div p::text').extract()
+		temp  = response.xpath('//script[@id="__NEXT_DATA__"]/text()').extract_first().split(',')
+		items['code'] = [s for s in temp if "code" in s][0].split(':')[1].strip('"')
+		items['link'] = "https://www.udemy.com/course/"+[s for s in temp if "cleanUrl" in s][0].split(':')[-1].strip('"').strip('}')+"?couponCode="+items['code']
+		print("comidoc",items)
+		return items
+
+
+
 	# def parse_learnviral(self,response):
 	# 	print(3)
 	# def parse_realdiscount(self,response):
