@@ -16,6 +16,7 @@ class Coupons(Spider):
 		for url in self.start_urls:
 			if url == 'https://smartybro.com/category/udemy-coupon-100-off/':
 				yield Request(url , callback=self.parse_smartybro)
+
 			# elif url == 'https://comidoc.net/coupons':
 			# 	yield Request(url , callback=self.parse_comidoc)
 			# elif url == 'https://udemycoupon.learnviral.com/':
