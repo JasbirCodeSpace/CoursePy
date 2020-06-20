@@ -23,10 +23,11 @@ class UdemyCouponsPipeline:
 		self.cur.execute("""DROP TABLE IF EXISTS %s """ % self.dbTable)
 		self.cur.execute("""CREATE TABLE %s (
 			site text,
-			name text PRIMARY KEY,
+			name text,
 			tags text,
 			link text,
-			code text)""" % self.dbTable)
+			code text,
+			UNIQUE(site,link) )""" % self.dbTable)
 		self.conn.commit()
 
 	def insert_db(self,item):
