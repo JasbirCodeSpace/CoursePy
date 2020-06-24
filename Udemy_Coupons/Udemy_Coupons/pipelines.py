@@ -9,7 +9,7 @@ import sqlite3
 import urllib.parse as urlparse
 
 class UdemyCouponsPipeline:
-	dbFile = 'udemycoupons'
+	dbFile = 'udemycoupons.db'
 	dbTable = 'udemy_coupons'
 	def __init__(self):
 		self.create_connection()
