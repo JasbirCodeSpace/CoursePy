@@ -10,7 +10,6 @@ import scrapy
 
 class UdacityItem(scrapy.Item):
     name = scrapy.Field()
-    image = scrapy.Field()
     category = scrapy.Field()
     difficulty = scrapy.Field()
     link = scrapy.Field()

@@ -14,11 +14,8 @@ class Udacity(Spider):
 
 	def parse_courses(self,response):
 		courses = response.css('div.card')
-		counter = 0
 
 		for course in courses:
-			counter += 1
-			print(counter)
 			name = course.css('.card-heading a::text').extract_first()
 			category = course.css('.category::text').extract_first()
 			difficulty = course.css('.level .capitalize::text').extract_first()
