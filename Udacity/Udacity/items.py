@@ -9,6 +9,9 @@ import scrapy
 
 
 class UdacityItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    name = scrapy.Field()
+    image = scrapy.Field()
+    category = scrapy.Field()
+    difficulty = scrapy.Field()
+    link = scrapy.Field()
+    image = scrapy.Field()
