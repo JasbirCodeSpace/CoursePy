@@ -21,6 +21,7 @@ class CourseraPipeline:
 	def create_table(self):
 		self.curr.execute(""" DROP TABLE IF EXISTS %s """ % self.db_table)
 		self.curr.execute(""" CREATE TABLE %s (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			name TEXT,
 			university TEXT,
 			category TEXT,
@@ -33,7 +34,8 @@ class CourseraPipeline:
 
 
 	def insert_row(self,item):
-		self.curr.execute(""" INSERT INTO %s VALUES(?,?,?,?,?,?,?,?)""" % self.db_table,(
+		self.curr.execute(""" INSERT INTO %s (name,university,category,difficulty,rating,enrollment,image,link) 
+			VALUES(?,?,?,?,?,?,?,?)""" % self.db_table,(
 			item['name'],
 			item['university'],
 			item['category'],
