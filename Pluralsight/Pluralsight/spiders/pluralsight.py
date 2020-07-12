@@ -1,5 +1,6 @@
 from scrapy import Spider, Request
 import numpy as np
+from ..items import PluralsightItem
 
 class PluralsightSpider(Spider):
     name = 'pluralsight'
@@ -30,11 +31,22 @@ class PluralsightSpider(Spider):
             yield Request(url,callback=self.parse_course,meta={'category':category})
 
     def parse_course(self, response):
-        title = response.xpath("//h1//text()").get()
-        author = response.css("div.author_image_mask']::text").get()
-        difficulty = response.css("div.difficulty-level::text").get()
-        duration = response.xpath("//div[@class='course-info__row--right']//text()").get()
-        link = response.request.url
-        category = response.meta.get('category')
-        yield {'title':title,'author':author,'difficulty':difficulty,'duration':duration,'link':link,'category':category}
+        item = PluralsightItem()
+        item['name'] = response.xpath("//h1//text()").get()
+        item['author'] = response.xpath("//div[@id='course-page-description']").xpath(".//a/text()").get()
+        course_info = response.css('div.course-info__row') 
+        
+        item['difficulty'] = course_info.css('div.difficulty-level::text').get() 
+        item['duration'] = course_info[-1].css('.clearfix .course-info__row--right::text').get()
+        item['link'] = response.request.url
+        item['category'] = response.meta.get('category')
+
+        #strip each element of item
+        for key, value in item.items():
+            if value is not None:
+                item[key] = value.strip()
+
+        yield item
+    
+
 
