@@ -11,7 +11,7 @@ lxml==4.5.0
 mysql-connector-python==8.0.20
 parsel==1.6.0
 Protego==0.1.16
-protobuf==3.12.2
+protobuf==3.15.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
